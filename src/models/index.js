@@ -3,18 +3,22 @@
 require('dotenv').config();
 const { Sequelize, DataTypes } = require('sequelize');
 const animalsSchema = require('./animal.schema');
+//'postgres://localhost:5432/database_development'
 
-// 'postgres://localhost:5432/d48-d8-api-app'
-// 'postgres://username:password@localhost:5432/d48-d8-api-app'
-// ternary:  WTF  what(conditional) ? return if TRUE : else return if FALSE
-const DATABASE_URL = process.env.NODE_ENV === 'test'
-  ? 'sqlite:memory'
-  : process.env.DATABASE_URL;
+const DATABASE_URL = process.env.DATABASE_URL;
+// NODE_ENV === 'test'
+//   ? 'sqlite:memory'
+//   : process.env.DATABASE_URL;
 
 // instantiates our database
 const sequelizeDatabase = new Sequelize(DATABASE_URL);
 
-//create PeopleModel with our Schema
+//syncs our database and creates tables
+sequelizeDatabase.sync()
+  .then(()=> console.log('you are connected'))
+  .catch(err => console.error(err));
+
+//create AnimalsModel with our Schema
 const AnimalsModel = animalsSchema(sequelizeDatabase, DataTypes);
 
 
