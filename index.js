@@ -1,10 +1,17 @@
 'use strict';
 
-require('dotenv').config();
-const app = require('./src/server.js');
-const { db } = require('./src/auth/models');
+// requires from the model/index.js file
 
-db.sync().then(() => {
-  app.start(process.env.PORT || 3002);
-});
+const { sequelize, FoodPrototype,AnimalsPrototype } = require('./src/models/index');
+const { start } = require('./src/server');
 
+//create all associated tables and make sure connection is good
+sequelize.sync()
+  .then(() => {
+    console.log('Successful Connection!');
+    // here lies danger - inserts every time it is started
+    // FoodPrototype.create({name: 'Pizza'});
+  })
+  .catch(err => console.error(err));
+
+start();

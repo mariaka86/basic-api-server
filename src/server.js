@@ -1,20 +1,46 @@
 'use strict';
 
 const express = require('express');
-// const animalsRouter = require('./routes/animals');
-// const PORT = process.env.PORT || 3002;
-
+const {  FoodPrototype,AnimalsPrototype } = require('./models/index');
+const PORT = process.env.PORT || 3002;
 const app = express();
+
+
+
+const validator = require('./middleware/validator.js');
+const errorHandler = require('./error-handlers/500.js');
+const notFound = require('./error-handlers/404.js');
+
+
+app.get('/', (req, res, next) => {
+  res.status(200).send('Welcome to the server ');
+});
+
+
+app.use('*', notFound);
 app.use(express.json());
-// app.use(animalsRouter);
+
+app.use(errorHandler);
+
+app.post('/animals', (req, res, send) => {
+  console.log ('req body', req.body);
+
+  const newAnimal=AnimalsPrototype.create(req.body);
+  res.status(200).send(newAnimal);
 
 
-module.exports ={    //imported************************
-  server: app,
-  start: (port) => {
-    if (!port) { throw new Error('Missing Port'); }
-    app.listen(port, () => {
-      console.log(`Server Up on ${port}`);
-    });
-  },
-};
+});
+
+app.post('/food',async(req, res, send) => {
+
+  const newFood = await FoodPrototype.create(req.body);
+
+  res.status(200).send(newFood);
+});
+
+
+function start(){
+  app.listen(PORT, () => console.log(`listening on port ${PORT}`));
+}
+
+module.exports = { app, start };
