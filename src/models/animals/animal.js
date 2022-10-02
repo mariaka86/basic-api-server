@@ -1,7 +1,7 @@
 'use strict';
 
-module.exports = (sequelizeDatabase, DataTypes) => {
-  return sequelizeDatabase.define('animals', {
+const animalsModel = (sequelize, DataTypes) => {
+  return sequelize.define('animals', {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -17,3 +17,4 @@ module.exports = (sequelizeDatabase, DataTypes) => {
     },
   });
 };
+module.exports = animalsModel;
